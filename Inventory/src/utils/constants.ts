@@ -49,7 +49,8 @@ const message = {
   invalidSubCategoryId: "Invalid sub category id.",
   invalidVehicleNumber: "Invalid vehicle number.",
  invalidUsernameOrPassword: "Invalid username or password.",
-  productNotFound: `Product not found`
+  productNotFound: `Product not found`,
+  serverError: "Server error. Please try again later.",
 };
 
 // Response Status
@@ -77,6 +78,7 @@ const code = {
   serviceUnavailable: 503,
   gatewayTimeOut: 504,
   expectationFailed: 417,
+  serverError: 500,
  
   notFound: 404, // Add this to fix the error
 };

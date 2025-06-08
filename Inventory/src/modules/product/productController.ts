@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from "express";
+import { Request, Response } from "express";
 import mongoose from "mongoose";
 import constants from "../../utils/constants";
 import message from "./productConstant";
@@ -6,151 +6,189 @@ import message from "./productConstant";
 import Product from "../../models/product";
 import Category from "../../models/category";
 
-// ✅ Create Product with Validation
-const createProduct = async (req: Request, res: Response, next: NextFunction) => {
+// ✅ Create Product
+const createProduct = async (req: Request, res: Response) => {
+  const { name, description, quantity, categories } = req.body;
+
+  if (!name || !description || !quantity || !Array.isArray(categories) || categories.length === 0) {
+    return res.status(constants.code.badRequest).json({
+      status: constants.status.statusFalse,
+      message: message.invalidProductData,
+    });
+  }
+
+  const trimmedName = name.trim().toLowerCase();
+
+  const existingProduct = await Product.findOne({ name: trimmedName });
+  if (existingProduct) {
+    return res.status(constants.code.preconditionFailed).json({
+      status: constants.status.statusFalse,
+      message: message.productExists,
+    });
+  }
+
   try {
-    const { name, description, quantity, categories } = req.body;
-console.log(req.body);
-    if (!name || !description || !quantity || !categories || categories.length === 0) {
-      return res.status(constants.code.badRequest).json({
-        status: constants.status.statusFalse,
-        message: message.invalidProductData,
-      });
-    }
-
-    const existingProduct = await Product.findOne({ name: name.trim().toLowerCase() });
-    if (existingProduct) {
-      return res.status(constants.code.preconditionFailed).json({
-        status: constants.status.statusFalse,
-        message: message.productExists,
-      });
-    }
-
-    const product = await Product.create({
-      name: name.trim().toLowerCase(),
+    const newProduct = await Product.create({
+      name: trimmedName,
       description,
       quantity,
-      categories: categories.map((catId: string) => new mongoose.Types.ObjectId(catId)),
-      createdBy: req.params.id,
+      categories: categories.map((id: string) => new mongoose.Types.ObjectId(id)),
+      createdBy: req.body.createdBy || null,
     });
 
-    res.status(constants.code.success).json({
+    return res.status(constants.code.success).json({
       status: constants.status.statusTrue,
       message: message.productAddSuccess,
-      data: product,
+      data: newProduct,
     });
-  } catch (err) {
-    next(err);
+  } catch (err: any) {
+    return res.status(constants.code.serverError).json({
+      status: constants.status.statusFalse,
+      message: err.message || "Server Error",
+    });
   }
 };
 
-// ✅ Get Paginated Product List
-const productList = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const { page = 1, limit = 10 } = req.query;
+// ✅ List Products (Paginated)
+const productList = async (req: Request, res: Response) => {
+  const page = parseInt(req.query.page as string) || 1;
+  const limit = parseInt(req.query.limit as string) || 10;
 
+  try {
     const products = await Product.find()
       .populate("categories", "name")
-      .limit(Number(limit))
-      .skip((Number(page) - 1) * Number(limit));
+      .limit(limit)
+      .skip((page - 1) * limit)
+      .sort({ createdAt: -1 });
 
-    res.status(constants.code.success).json({
+    const total = await Product.countDocuments();
+
+    return res.status(constants.code.success).json({
       status: constants.status.statusTrue,
+      total,
+      page,
+      limit,
       data: products,
     });
-  } catch (err) {
-    next(err);
+  } catch (err: any) {
+    return res.status(constants.code.serverError).json({
+      status: constants.status.statusFalse,
+      message: err.message || "Error fetching product list",
+    });
   }
 };
 
-// ✅ Get Categories from DB (Only for reference in Product CRUD)
-const categoryList = async (req: Request, res: Response, next: NextFunction) => {
+// ✅ List Categories
+const categoryList = async (_req: Request, res: Response) => {
   try {
-    const categories = await mongoose.model("category").find();
-    res.status(constants.code.success).json({
+    const categories = await Category.find({ isDeleted: false });
+    return res.status(constants.code.success).json({
       status: constants.status.statusTrue,
       data: categories,
     });
-  } catch (err) {
-    next(err);
-  }
-};
-
-// ✅ Filter Products by Name & Category
-const filterProducts = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const { name, categories } = req.body;
-    let filterCriteria: any = {};
-
-    if (name) filterCriteria.name = new RegExp(name.trim(), "i");
-    if (categories && categories.length > 0) filterCriteria.categories = { $in: categories };
-
-    const filteredProducts = await Product.find(filterCriteria).populate("categories", "name");
-
-    res.status(constants.code.success).json({
-      status: constants.status.statusTrue,
-      data: filteredProducts,
+  } catch (err: any) {
+    return res.status(constants.code.serverError).json({
+      status: constants.status.statusFalse,
+      message: err.message || "Error fetching categories",
     });
-  } catch (err) {
-    next(err);
   }
 };
 
-// ✅ Update Product with Validation
-const updateProduct = async (req: Request, res: Response, next: NextFunction) => {
+// ✅ Filter Products
+const filterProducts = async (req: Request, res: Response) => {
+  const { name, categories } = req.body;
+
+  const filter: any = {};
+  if (name) filter.name = new RegExp(name.trim(), "i");
+  if (Array.isArray(categories) && categories.length > 0)
+    filter.categories = { $in: categories.map((id: string) => new mongoose.Types.ObjectId(id)) };
+
   try {
-    const { name, description, quantity, categories } = req.body;
+    const products = await Product.find(filter).populate("categories", "name");
+    return res.status(constants.code.success).json({
+      status: constants.status.statusTrue,
+      data: products,
+    });
+  } catch (err: any) {
+    return res.status(constants.code.serverError).json({
+      status: constants.status.statusFalse,
+      message: err.message || "Error filtering products",
+    });
+  }
+};
 
-    if (!name || !description || !quantity || !categories || categories.length === 0) {
-      return res.status(constants.code.badRequest).json({
-        status: constants.status.statusFalse,
-        message: message.invalidProductData,
-      });
-    }
+// ✅ Update Product
+const updateProduct = async (req: Request, res: Response) => {
+  const { name, description, quantity, categories } = req.body;
+  const { product_id } = req.params;
 
-    const updatedProduct = await Product.findByIdAndUpdate(
-      req.params.product_id,
-      { name: name.trim().toLowerCase(), description, quantity, categories },
+  if (!name || !description || !quantity || !Array.isArray(categories) || categories.length === 0) {
+    return res.status(constants.code.badRequest).json({
+      status: constants.status.statusFalse,
+      message: message.invalidProductData,
+    });
+  }
+
+  try {
+    const updated = await Product.findByIdAndUpdate(
+      product_id,
+      {
+        name: name.trim().toLowerCase(),
+        description,
+        quantity,
+        categories,
+        updatedBy: req.body.updatedBy || null,
+      },
       { new: true }
     );
 
-    if (!updatedProduct) {
+    if (!updated) {
       return res.status(constants.code.notFound).json({
         status: constants.status.statusFalse,
         message: message.productNotFound,
       });
     }
 
-    res.status(constants.code.success).json({
+    return res.status(constants.code.success).json({
       status: constants.status.statusTrue,
       message: message.productUpdateSuccess,
-      data: updatedProduct,
+      data: updated,
     });
-  } catch (err) {
-    next(err);
+  } catch (err: any) {
+    return res.status(constants.code.serverError).json({
+      status: constants.status.statusFalse,
+      message: err.message || "Error updating product",
+    });
   }
 };
 
 // ✅ Delete Product
-const deleteProduct = async (req: Request, res: Response, next: NextFunction) => {
+const deleteProduct = async (req: Request, res: Response) => {
+  const { product_id } = req.params;
+
   try {
-    const deletedProduct = await Product.findByIdAndDelete(req.params.product_id);
-    if (!deletedProduct) {
+    const deleted = await Product.findByIdAndDelete(product_id);
+
+    if (!deleted) {
       return res.status(constants.code.notFound).json({
         status: constants.status.statusFalse,
         message: message.productNotFound,
       });
     }
 
-    res.status(constants.code.success).json({
+    return res.status(constants.code.success).json({
       status: constants.status.statusTrue,
       message: message.productDeleteSuccess,
     });
-  } catch (err) {
-    next(err);
+  } catch (err: any) {
+    return res.status(constants.code.serverError).json({
+      status: constants.status.statusFalse,
+      message: err.message || "Error deleting product",
+    });
   }
 };
 
+// ✅ Export All
 export default {
   createProduct,
   productList,

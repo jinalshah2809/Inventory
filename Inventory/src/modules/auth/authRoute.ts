@@ -15,7 +15,8 @@ router.post(
 router.post(
   `/logout`,
   accessRateLimiter,
-
+ checkAccessKey,
+ checkAuth,
   controller.logout
 );
 
@@ -23,7 +24,8 @@ router.post(
   `/logout-all`,
   accessRateLimiter,
   
-
+ checkAccessKey,
+ checkAuth,
   controller.logoutFromAll
 );
 
