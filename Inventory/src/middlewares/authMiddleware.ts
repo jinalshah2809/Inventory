@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import constants from "../utils/constants";
-
+import jwt from "jsonwebtoken";
 import User from "../models/user";
 import { checkPassword } from "../helpers/helper";
 
@@ -39,45 +39,37 @@ const checkAccessKey = async (req: Request, res: Response, next: NextFunction) =
 
 const checkAuth = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { username, password } = req.body;
+     const authHeader = req.headers.authorization;
 
-    // 🔹 Validate request data
-    if (!username || !password) {
-      return res.status(constants.code.badRequest).json({
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(constants.code.unAuthorized).json({
         status: constants.status.statusFalse,
-        message: "Username and password are required.",
+        message: "Authorization token missing or malformed.",
       });
     }
 
-    // 🔹 Check if user exists
-    const userData = await User.findOne({ username:username});
+    const token = authHeader.split(" ")[1];
 
-    if (!userData) {
+    // 🔐 Verify token
+    const decoded: any = jwt.verify(token, process.env.JWT_SECRET as string); // JWT_SECRET must be defined in .env
+
+    // 🔍 Fetch user from DB
+    const user = await User.findById(decoded.userId); // or decoded._id
+    if (!user) {
       return res.status(constants.code.unAuthorized).json({
         status: constants.status.statusFalse,
         message: constants.message.invalidUsernameOrPassword,
       });
     }
 
-    // 🔹 Verify password
-    const isPasswordValid = await checkPassword(password, userData.password);
-    if (!isPasswordValid) {
-      return res.status(constants.code.unAuthorized).json({
-        status: constants.status.statusFalse,
-        message: constants.message.invalidUsernameOrPassword,
-      });
-    }
-
-    // ✅ User authenticated, proceed
-   res.locals.user = userData; // ✅ Avoids TypeScript issues
-next();
-
+    // ✅ Attach user to request (for downstream use)
+    res.locals.user = user;
     next();
-  } catch (err) {
+  } catch (err: any) {
     console.error("Error in checkAuth middleware:", err);
-    res.status(constants.code.internalServerError).json({
+    return res.status(constants.code.unAuthorized).json({
       status: constants.status.statusFalse,
-      message: "Internal Server Error",
+      message: "Invalid or expired token.",
     });
   }
 };

@@ -1,59 +1,28 @@
-import { Schema, model } from "mongoose";
+import { Schema, model, Types } from "mongoose";
 import { nintyDays } from "../helpers/cron";
 
 const deviceSchema = new Schema(
   {
-    userId: { type: Schema.Types.ObjectId, ref: "User" },
-    deviceId: {
-      //the device ID is a unique, anonymized string of numbers and letters that identifies every individual smartphone or tablet in the world
-      type: String,
-      required: true,
-    },
-    appId: {
-      //the app id, usually something like com.moodle.moodlemobile
-      type: String,
-      required: true,
-    },
-    name: {
-      //the device name, occam or iPhone etc..
-      type: String,
-      required: true,
-    },
-    model: {
-      //the device model, Nexus 4 or iPad 1,1
-      type: String,
-      required: true,
-    },
-    platform: {
-      //the device platform, Android or iOS etc
-      type: String,
-      required: true,
-    },
-    version: {
-      //The device version, 6.1.2, 4.2.2 etc..
-      type: String,
-      required: true,
-    },
-    ipAddress: {
-      type: String,
-      required: true,
-    },
-    latitude: {
-      type: Schema.Types.Decimal128,
-      required: true,
-    },
-    longitude: {
-      type: Schema.Types.Decimal128,
-      required: true,
-    },
+    userId: { type: Types.ObjectId, ref: "User", required: true },
+    deviceId: { type: String, required: true },     // Unique device identifier
+    appId: { type: String, required: true },         // App ID like com.example.app
+    name: { type: String, required: true },          // Device name e.g., iPhone
+    model: { type: String, required: true },         // Device model
+    platform: { type: String, required: true },      // OS platform
+    version: { type: String, required: true },       // OS version
+    ipAddress: { type: String, required: true },
+    latitude: { type: Schema.Types.Decimal128, required: true },
+    longitude: { type: Schema.Types.Decimal128, required: true },
     isDeleted: { type: Boolean, default: false },
-    createdBy: { type: Schema.Types.ObjectId, ref: "User" },
-    updatedBy: { type: Schema.Types.ObjectId, ref: "User" },
-    deletedBy: { type: Schema.Types.ObjectId, ref: "User" },
+    createdBy: { type: Types.ObjectId, ref: "User" },
+    updatedBy: { type: Types.ObjectId, ref: "User" },
+    deletedBy: { type: Types.ObjectId, ref: "User" },
   },
   { timestamps: true }
 );
 
+// Automatically delete after 90 days
+nintyDays(model("device", deviceSchema));
+
 const Device = model("device", deviceSchema);
-nintyDays(Device)
 export default Device;

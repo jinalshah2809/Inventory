@@ -7,10 +7,20 @@ import { checkPassword, toLowerCase } from "../../helpers/helper";
 import { createToken, deleteAllToken, deleteToken } from "../../helpers/token";
 
 // ✅ Login User
-const login = async (req: Request, res: Response, next: NextFunction) => {
+export const login = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const user = await User.findOne({ "username": req.body.username });
+    const { username, password, device_info } = req.body;
 
+    // ✅ Check required fields
+    if (!username || !password) {
+      return res.status(constants.code.badRequest).json({
+        status: constants.status.statusFalse,
+        message: "Username and password are required.",
+      });
+    }
+
+    // ✅ Fetch user
+    const user = await User.findOne({ username });
     if (!user) {
       return res.status(constants.code.preconditionFailed).json({
         status: constants.status.statusFalse,
@@ -18,38 +28,66 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
       });
     }
 
-    if (!(await checkPassword(req.body.password, user.password))) {
+    // ✅ Check password
+    const isPasswordValid = await checkPassword(password, user.password);
+    if (!isPasswordValid) {
       return res.status(constants.code.preconditionFailed).json({
         status: constants.status.statusFalse,
         message: constants.message.invalidPassword,
       });
     }
 
-   
+    // ✅ Validate device info
+    if (!device_info || !device_info.device_id) {
+      return res.status(constants.code.badRequest).json({
+        status: constants.status.statusFalse,
+        message: "Device information is required.",
+      });
+    }
 
+    // ✅ Validate user ID
+    const userId = user._id?.toString();
+    if (!userId || !mongoose.Types.ObjectId.isValid(userId)) {
+      return res.status(constants.code.internalServerError).json({
+        status: constants.status.statusFalse,
+        message: "Invalid user ID.",
+      });
+    }
 
+    // ✅ Build payload for device
+    const devicePayload = {
+      userId: new mongoose.Types.ObjectId(userId),
+      ...device_info,
+      createdBy: new mongoose.Types.ObjectId(userId),
+    };
+
+    // ✅ Upsert device info
     await Device.findOneAndUpdate(
-      { deviceId: req.body.device_info.device_id, userId: user._id },
-      {
-        userId: user._id,
-        ...req.body.device_info,
-        createdBy: user._id,
-      },
+      { deviceId: device_info.device_id, userId },
+      devicePayload,
       { upsert: true, new: true }
     );
 
+    // ✅ Create JWT token
     const payload = { id: user._id };
-    res.status(constants.code.success).json({
+    const token = await createToken(payload);
+
+    return res.status(constants.code.success).json({
       status: constants.status.statusTrue,
+
+
       message: constants.message.userLogin,
-      token: await createToken(payload),
-      data: await user,
+      token,
+      data: user,
     });
   } catch (error) {
-    next(error);
+    console.error("Login error:", error);
+    return res.status(constants.code.internalServerError).json({
+      status: constants.status.statusFalse,
+      message: "Login failed. Please try again later.",
+    });
   }
-};
-
+}
 const logout = async (req: any, res: Response, next: NextFunction) => {
   try {
     User.findOne({

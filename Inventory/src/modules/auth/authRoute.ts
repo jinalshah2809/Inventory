@@ -8,7 +8,6 @@ router.post(
   `/login`,
   accessRateLimiter,
  checkAccessKey,
- checkAuth,
   controller.login
 );
 
