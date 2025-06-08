@@ -1,0 +1,908 @@
+{
+	"info": {
+		"_postman_id": "1c51ee39-03ba-404f-82ca-587839f72c64",
+		"name": "TingleMe",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "45078043",
+		"_collection_link": "https://tingleme.postman.co/workspace/f973014e-1b5b-4c9f-815d-2276d2c601ed/collection/45078043-1c51ee39-03ba-404f-82ca-587839f72c64?action=share&source=collection_link&creator=45078043"
+	},
+	"item": [
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "User",
+					"item": [
+						{
+							"name": "create user",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "AccessKey",
+										"value": "{{accesskey}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"first_name\":\"sachin\",\n    \"last_name\": \"kumar\",\n    \"email\":\"sachin2@yopmail.com\",\n    \"phone\": \"+919808800922\",\n    \"gender\": \"male\",\n    \"date_of_birth\": \"2002-05-01T04:53:53.508Z\",\n    \"role\": 4,\n      \"privileges\": [\n    [\"user_management\", [\"read\"]],\n    [\"email_management\", [\"read\", \"write\", \"delete\"]]\n  ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}/admin/user/add-user",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"admin",
+										"user",
+										"add-user"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "user detail",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "AccessKey",
+										"value": "{{accesskey}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"first_name\": \"Jinal\",\r\n  \"last_name\": \"Shah\",\r\n  \"email\": \"jinal.shah@example.com\",\r\n  \"phone\": \"+919876543210\",\r\n  \"gender\": \"female\",\r\n  \"date_of_birth\": \"1995-08-15\",\r\n  \"role\": 1,\r\n  \"privileges\": [\"manage_users\", \"view_reports\", \"edit_settings\"]\r\n}\r\n",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}/admin/user/update-detail/66447cee7135798522b4dd5e",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"admin",
+										"user",
+										"update-detail",
+										"66447cee7135798522b4dd5e"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "update user",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [
+									{
+										"key": "AccessKey",
+										"value": "{{accesskey}}"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"first_name\":\"naman\",\n    \"last_name\": \"kaur\",\n    \"email\":\"naman@yopmail.com\",\n    \"phone\": \"9078560532\",\n    \"gender\": \"male\",\n    \"date_of_birth\": \"2002-05-01T04:53:53.508Z\",\n    \"role\": 4,\n      \"privileges\": [\n    [\"user_management\", [\"read\"]],\n    [\"email_management\", [\"read\", \"write\", \"delete\"]]\n  ]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{local}}/admin/user/update-detail/684189043d315e82c706a2a6",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"admin",
+										"user",
+										"update-detail",
+										"684189043d315e82c706a2a6"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "list user",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{access-token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "AccessKey",
+										"value": "{{accesskey}}"
+									}
+								],
+								"url": {
+									"raw": "{{local}}/admin/user/user-list?page=0&limit=0&sort=desc&search=",
+									"host": [
+										"{{local}}"
+									],
+									"path": [
+										"admin",
+										"user",
+										"user-list"
+									],
+									"query": [
+										{
+											"key": "page",
+											"value": "0"
+										},
+										{
+											"key": "limit",
+											"value": "0"
+										},
+										{
+											"key": "sort",
+											"value": "desc"
+										},
+										{
+											"key": "search",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Login Admin",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "AccessKey",
+								"value": "{{accesskey}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"tingleme.helpdesk@gmail.com\",\r\n    \"password\": \"SuperAdmin@123\",\r\n    \"device_info\": {\r\n                    \"userId\": \"\",\r\n                    \"deviceId\": \"12345678912\",\r\n                    \"appId\": \"889976\",\r\n                    \"name\": \"mi firefox\",\r\n                    \"model\": \"m-12\",\r\n                    \"platform\": \"micro\",\r\n                    \"version\": \"2.\",\r\n                    \"ipAddress\": \"192.17.28\"\r\n                }\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/admin/login",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"admin",
+								"login"
+							]
+						},
+						"description": "Generated from cURL: curl --location --request POST 'http://localhost:8080/api/admin/login' \\\r\n--header 'AccessKey: adg47SNyv7d45adlfrKlu7a0OZahpd1fh2b58TQazXad0g5HiM5yWasdvRt208' \\\r\n--header 'Content-Type: application/json' \\\r\n--data-raw '{\r\n    \"email\": \"admin@sankalp.com\",\r\n    \"password\": \"Super@1234\",\r\n    \"device_info\": {\r\n                    \"userId\": \"\",\r\n                    \"deviceId\": \"12345678912\",\r\n                    \"appId\": \"889976\",\r\n                    \"name\": \"mi firefox\",\r\n                    \"model\": \"m-12\",\r\n                    \"platform\": \"micro\",\r\n                    \"version\": \"2.\",\r\n                    \"ipAddress\": \"192.17.28\"\r\n                }\r\n    \r\n}'"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Profile Detail",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "AccessKey",
+								"value": "{{accesskey}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/admin/get-detail",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"admin",
+								"get-detail"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "forgot password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "AccessKey",
+								"value": "adg47SNyv7d45adlfrKlu7a0OZahpd1fh2b58TQazXad0g5HiM5yWasdvRt208"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"varun@yopmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/user/forgot-password",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"user",
+								"forgot-password"
+							]
+						},
+						"description": "Generated from cURL: curl --location --request POST 'http://localhost:8080/api/user/forgot-password' \\\r\n--header 'AccessKey: adg47SNyv7d45adlfrKlu7a0OZahpd1fh2b58TQazXad0g5HiM5yWasdvRt208' \\\r\n--header 'Content-Type: application/json' \\\r\n--data-raw '{\r\n    \"email\": \"varun@yopmail.com\"\r\n}'"
+					},
+					"response": []
+				},
+				{
+					"name": "Reset Password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "AccessKey",
+								"value": "{{accesskey}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"verify_token\": \"Ez7XHLbYHF58aC4wevMuSVv6apfEnlv0q2eFA6J6nnRcqwKW\",\n    \"password\": \"SuperAdmin@1234\",\n    \"password_confirmation\":\"SuperAdmin@1234\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/admin/reset-password",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"admin",
+								"reset-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change Password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "AccessKey",
+								"value": "{{accesskey}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"old_password\": \"SuperAdmin@1234\",\n    \"new_password\": \"SuperAdmin@123\",\n     \"new_password_confirmation\": \"SuperAdmin@123\"\n\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/admin/change-password",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"admin",
+								"change-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deactivate Account",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "AccessKey",
+								"value": "{{accesskey}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"status\":0\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/admin/deactivate-account",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"admin",
+								"deactivate-account"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change Profile Picture",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "AccessKey",
+								"value": "{{accesskey}}",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "multipart/form-data",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "profile_picture",
+									"type": "file",
+									"src": "/C:/Users/limra/OneDrive - CUNEIFORM CONSULTING/Desktop/New-Logo-Neoma-White.png"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{local}}/auth/change-profilePicture/65d862036ef3446315e360f3",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"auth",
+								"change-profilePicture",
+								"65d862036ef3446315e360f3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "New Request",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{access-token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "AccessKey",
+								"value": "{{accesskey}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"is_delete\": true\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/admin/user/delete-account/684188ab3d315e82c706a292",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"admin",
+								"user",
+								"delete-account",
+								"684188ab3d315e82c706a292"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "auth",
+			"item": [
+				{
+					"name": "register user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "657bdab0bff5c0cf8c67f311",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "AccessKey",
+								"value": "fkYXLn6xB3tRC8ThMDsF4jwUvrKuHSXXWCqt8xxeJJS2to0hZ5Tu77XFneZyZ8",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"first_name\" : \"Jinal\",\n    \"last_name\" : \"Shah\",\n    \"email\" : \"jinal2039@gmail.com\",\n    \"phone\" : \"+915655499176\",\n    \"password\":\"Jinu@1234\",\n    \"referralCode\":\"BWY495\"\n  \n \n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/admin/user/register",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"admin",
+								"user",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "2XCVWITrT1JFSy7brWdK40tov72hznyZKp89hSIvdIHeq7mR",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "AccessKey",
+								"value": "fkYXLn6xB3tRC8ThMDsF4jwUvrKuHSXXWCqt8xxeJJS2to0hZ5Tu77XFneZyZ8"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n      \"email\" : \"jinal.shah@thecuneiform.com\",\n  \n    \"password\":\"Jinu@1234\",\n\n    \"device_info\": {\n                    \"userId\": \"\",\n                    \"ip\":\"1111111111\",\n                    \"device_id\": \"12345678910\",\n                    \"app_id\": \"889976\",\n                    \"name\": \"chrome firefox\",\n                    \"model\": \"Bkj L2r\",\n                    \"platform\": \"windows\",\n                    \"version\": \"2.\",\n                    \"ipAddress\": \"192.17.28\",\n                      \"latitude\" : 23.0276,\n                      \"longitude\" : 72.5871\n                }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User List",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "fNkxUyyp4GC1Z8sEIiuyzteRUR1QEqG2ET42DAfR5LJlG9tR",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "AccessKey",
+								"value": "fkYXLn6xB3tRC8ThMDsF4jwUvrKuHSXXWCqt8xxeJJS2to0hZ5Tu77XFneZyZ8",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/auth/user-list",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"auth",
+								"user-list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "User Details",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "ybJPKygOhorbpEFw5HO3yzrBe3AyTa3OEPX3fGCZObJUZV3S",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "AccessKey",
+								"value": "fkYXLn6xB3tRC8ThMDsF4jwUvrKuHSXXWCqt8xxeJJS2to0hZ5Tu77XFneZyZ8",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8081/api/auth/user-detail/683ec857a20ae24cc6a944db",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"auth",
+								"user-detail",
+								"683ec857a20ae24cc6a944db"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "forgot password",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "AccessKey",
+								"value": "adg47SNyv7d45adlfrKlu7a0OZahpd1fh2b58TQazXad0g5HiM5yWasdvRt208"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"ram@yopmail.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/admin/forgot-password",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"admin",
+								"forgot-password"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Profile",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "PqOWsf9GE34KF8qdPaJ1HIzfbChSqMkNw3nUrrnCyFBtfTOy",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "AccessKey",
+								"value": "fkYXLn6xB3tRC8ThMDsF4jwUvrKuHSXXWCqt8xxeJJS2to0hZ5Tu77XFneZyZ8",
+								"type": "text"
+							},
+							{
+								"key": "Content-Type",
+								"value": "multipart/form-data",
+								"type": "text",
+								"disabled": true
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{     \n       \"first_name\": \"Updated\",\n       \"last_name\": \"Admin\",\n       \"gender\": \"female\",\n       \"date_of_birth\": \"1995-03-08T00:00:00.000Z\",\n       \"phone\": \"+919999999999\"\n\n }",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8080/api/admin/update-detail",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"admin",
+								"update-detail"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout From All Devices",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "ybJPKygOhorbpEFw5HO3yzrBe3AyTa3OEPX3fGCZObJUZV3S",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "AccessKey",
+								"value": "fkYXLn6xB3tRC8ThMDsF4jwUvrKuHSXXWCqt8xxeJJS2to0hZ5Tu77XFneZyZ8",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8081/api/auth/logout-all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8081",
+							"path": [
+								"api",
+								"auth",
+								"logout-all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "NS2uL0DO7InseBHSjAH3ggqLWID7m3lQdPzIbLKWx6cua4D8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "AccessKey",
+								"value": "adf47SNyv7d45adlfrKlu7a0OZahpd1fh2b58TQazXad0g5HiM5yWasdvRt208",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:8080/api/admin/logout",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8080",
+							"path": [
+								"api",
+								"admin",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
